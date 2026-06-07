@@ -1,0 +1,50 @@
+name: Post news
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Kyiv summer time: 09:00, 12:00, 15:00, 18:00, 21:00.
+    # GitHub cron uses UTC.
+    - cron: "0 6,9,12,15,18 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: post-news
+  cancel-in-progress: false
+
+jobs:
+  post-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Post one news item
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: python bot.py
+
+      - name: Save posted news history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add posted_news.json
+          if git diff --cached --quiet; then
+            echo "No posted news history changes."
+          else
+            git commit -m "Update posted news history"
+            git push
+          fi

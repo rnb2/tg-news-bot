@@ -29,11 +29,11 @@ RSS_SOURCES = {
         "https://www.film.ru/export/rss.xml",
     ],
     "Юмор": [
-         "http://feeds.feedburner.com/bash-org-ru-abyss",
+        "http://feeds.feedburner.com/bash-org-ru-abyss",
     ],
     "Спорт и футбол": [
-         "https://www.ua-football.com/ru/rss/all.xml",
-         "https://sport.ua/rss/all",
-         "https://ua.tribuna.com/rss/all",
-    ]
+        "https://www.ua-football.com/ru/rss/all.xml",
+        "https://sport.ua/rss/all",
+        "https://ua.tribuna.com/rss/all",
+    ],
 }
